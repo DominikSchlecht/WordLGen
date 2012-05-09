@@ -6,7 +6,7 @@ Help:
 Help for 'WordLGen', the easy to use Word List Generator:
 
 Usage:
-'java WordLGen [-d] [-f] [-a \"part1 {part2}]'
+'java WordLGen [-d] [-f] [-a "part1 {part2}"]'
 Params:
 '-a' use argumented mode, meaning you write the words to
      combine after this param, divided by ' ' (space).
