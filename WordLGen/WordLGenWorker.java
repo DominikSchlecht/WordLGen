@@ -3,8 +3,8 @@
  * dominik.schlecht@hotmail.de
  * 
  * WordLGenWorker.java
- * v. 1.0
- * 2012.05.08
+ * v. 1.1
+ * 2012.05.09
  */
 
 import java.io.BufferedReader;
@@ -13,65 +13,66 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.*;
 
 public class WordLGenWorker {
     
     //Attributes
     private String[] parts;
-    private List<String> erg;
     private boolean consoleOutput = false;
     FileWriter fstream;
 
+    //No constructor needed
     
-    
-    //Constructor
-    
-    //Methods    
-    public void combine(String inputParam) throws Exception{
+    //Methods
+    /*
+     * Main Method, intializing everything needed
+     */
+    public void combine(String iPWords, String iPFilename) throws Exception{
+        //Init
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter out;
         File f;
-        String input;
+        String input, filename = iPFilename;
         int anzW = 0;
         long anzC = 0;
         
-        
-        //Get the input
-        if (inputParam.isEmpty()){
+        //Get the words
+        if (iPWords.isEmpty()){
             System.out.println("Enter the parts to be combined, seperated by ' ' (space)");
             input = br.readLine();
-            br.close();
+           
         } else {
-            input = inputParam;
+            input = iPWords;
         }
         
-        //divide in parts
+        //Count words
         for (int i = 0; i < input.length(); i++){
-            //System.out.println(input.charAt(i));
             if (input.charAt(i) == ' '){
+                //Found new part
                 anzW++;
-                //System.out.println("one '|' found" + anz);
             } else {
-                //System.out.println("no '|' found");
+                //No part found
             }
         }
+        //Count plus 1 because normal humans count from 1, we from 0..
         anzW++;
         
-        //print the new infos
+        //Print the new infos
         System.out.println("You entered '" + input +
-                "' for input, found " + anzW + " parts.");
+                "' for input, found " + anzW + " words.");
         if (anzW <= 1){
-            System.out.println("Only one part found, \nprogramm exits");
+            //Not sure of "throw new Exception" might be a bit hard for error
+            //throw new Exception("Only one word given, \n programm exits");
+            System.out.println("Only one word given, programm exits");
             return;
         }
         
         //Work with the input
         
-        //Fields
+        //Initialize words
         parts = new String [anzW];
         
-        //Insert the single parts in the parts[]
+        //Insert the single parts in parts
         int last = 0, next = 0, plInParts = 0;
         while (next < input.length()){
             if (input.charAt(next) == ' '){
@@ -83,30 +84,57 @@ public class WordLGenWorker {
         }
         parts[plInParts] = input.substring(last);
         
-        //Fakultaet
+        //Faktorial
         int tmp1, tmp2 = 1;
         for (int j = 1; j <= anzW; j++){
             tmp1 = tmp2;
-            //fakultät in the heigth of j
+            //faktorial in the heigth of j
             for (int i = 0; i < j; i++){
                 tmp1 = tmp1 * anzW;
             }
             anzC = anzC + tmp1;
         }
         
-        System.out.println("Number of Combinations: " + anzC);
+        //Print the number of combinations
+        System.out.println("Number of combinations: " + anzC);
         
-        //initialize obj for real work
-        erg = new LinkedList<String>();
-        f = new File("out.txt");
-        if(!f.exists()){
-            f.createNewFile();
-            System.out.println("File created in " + f.getAbsolutePath());
-        } else {
-            System.out.println("File already exists, the existing file will " +
-            		"be overwritten.");
+        //Ask for file TODO
+        if (filename.isEmpty()){
+            System.out.println("Desired filename: ");
+            filename = br.readLine();
         }
-        fstream = new FileWriter("out.txt");
+        f = new File(filename);
+        if(f.exists()){
+            //File already exists, complain
+            System.out.println("File already exists, do you want the file to " +
+                    "be overwritten?\n(Allowed input: 'yes', 'y', 'no', 'n')" +
+                    "");
+            boolean ok = false;
+            while (!ok){
+                input = br.readLine(); //Old Input not required anymore (-> parts[])
+                switch (input){
+                case "yes":
+                case "y":
+                    //User wants to overwrite file
+                    System.out.println("The existing file will be overwritten");
+                    f.createNewFile();
+                    ok = true;
+                    break;
+                case "no":
+                case "n":
+                    //User doesn't want to overwrite it, exit 
+                    //(TODO feature retype filename)
+                    System.out.println("The file was not overwritten,\n"+
+                    		"programm exits");
+                    return;
+                default:
+                    System.out.println("Allowed input: 'yes', 'y', 'no', 'n'");
+                }
+            }
+        }
+        f.createNewFile();
+        System.out.println("File created: " + f.getAbsolutePath());
+        fstream = new FileWriter(filename);
         out = new BufferedWriter(fstream);
         
         
@@ -115,7 +143,9 @@ public class WordLGenWorker {
             this.combineAndWrite("", 0, i, out);
         }
         out.close();
-        System.out.println("Everything went well, good luck out there");
+        br.close();
+        System.out.println("Everything went well, \n" +
+        		"thank you for using my programm.");
     }
     
     /*
@@ -124,9 +154,10 @@ public class WordLGenWorker {
     public void combineAndWrite(String tmp, int curPos, int desLen, 
             BufferedWriter out){
         
+        //Recursive abort test
         if (curPos == desLen){
+            //Last recursive element
             for (int i = 0; i < parts.length; i++){
-                this.erg.add(tmp + this.parts[i]);
                 if (consoleOutput){
                     System.out.println(tmp + this.parts[i]);
                 }
@@ -138,6 +169,7 @@ public class WordLGenWorker {
                 }
             }
         } else {
+            //Recursive element somewhere in the middle
             String ntmp;
             ntmp = tmp;
             for (int i = 0; i < parts.length; i++){
@@ -148,24 +180,37 @@ public class WordLGenWorker {
     }
     
     public void printHelp(){
-        System.out.print("Help for 'WordLGen', the easy to use Word List Generator\n\n" +
+        System.out.print("Help for 'WordLGen', the easy to use Word List " +
+        		"Generator\n\n" +
         		"Usage:\n" +
         		"'java WordLGen [-d] [-a \"part1 {part2}]'\n\n" +
         		"Params:\n" +
-        		"'-h' display this help\n" +
-        		"'-a' use argumented mode, meaning you write the parts to combine after this param, divided by ' '\n" +
-        		"'-d' displays all combined words in console, can  be combined with '-a'\n" +
+                "'-a' use argumented mode, meaning you write the words to\n" +
+                "      combine after this param, divided by ' ' (space).\n" +
+        		"'-d' displays all combined words in console, can be\n" +
+        		"     combined with '-a'. All combinations are still written\n" +
+        		"     to the file (out).\n" +
+        		"'-f' the name of the file to write to.\n" +
+                "'-h' display this help\n." +
         		"\n" +
         		"Examples:\n" +
         		"Working: \n" +
-        		"'java WordLGen' starts the programm and allowes you to ender the part afterwards\n" +
-        		"'java WordLGen -a \"one two three\"' will combine the 3 parts\n" +
+        		"'java WordLGen' starts the programm and allowes you to ender " +
+        		"the part afterwards.\n" +
+        		"'java WordLGen -a \"one two three\"' will combine the 3 " +
+        		"parts.\n" +
+                "'java WordLGen -d -f file1 -a \"one two three\"' will combine "+
+                "the words 'one' 'two' 'three'\n" +
+                "     and write it to console and to file 'file1'.\n" +
         		"\n" +
         		"Less usefull:" +
         		"'java WordLGen -h' will display the help\n" +
-        		"'java WordLGen -a \"one two three\" uselessParam' will display the help\n" +
-        		"'java WordLGen -a -b -d -c' will display the help (which you seem to need)\n" +
-        		"'java WordLGen \"one two three\"' will display the help"); //TODO
+        		"'java WordLGen -a \"one two three\" uselessParam' will " +
+        		"display the help.\n" +
+        		"'java WordLGen -a -b -d -c' will display the help (which you " +
+        		"seem to need).\n" +
+        		"'java WordLGen \"one two three\"' will display the help.\n\n" +
+        		"Made by Dominik Schlecht, dominik.schlecht@hotmail.de");
     }
     
     public String setConsoleOutput(boolean value){

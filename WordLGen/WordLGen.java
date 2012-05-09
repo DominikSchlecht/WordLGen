@@ -3,47 +3,35 @@
  * dominik.schlecht@hotmail.de
  * 
  * WordLGen.java
- * v. 1.0
- * 2012.05.06
+ * v. 1.1
+ * 2012.05.09
  */
 public class WordLGen {
     
     public static void main(String[] args) throws Exception{
-        WordLGenWorker worker = new WordLGenWorker();
         String input = "";
-        if (args.length != 0){
-            switch (args[0]){
-            case "-h":
-                worker.printHelp();
-                break;
-                
+        String filename = "";
+        WordLGenWorker worker = new WordLGenWorker();
+        
+        for (int i = 0; i < args.length; i++){
+            switch (args[i]){
             case "-a":
-                if (args.length == 2){
-                    input = args[1];
-                    worker.combine(input);
-                } else {
-                    worker.printHelp();
-                }
+                i = i+1;
+                input = args[i];
                 break;
-                
             case "-d":
                 worker.setConsoleOutput(true);
-                if (args.length == 3){
-                    input = args[2];
-                    worker.combine(input);
-                    //System.out.println(args[1]);
-                } else if (args.length > 3){
-                    worker.printHelp();
-                }
-                
                 break;
-                
+            case "-f":
+                i = i+1;
+                filename = args[i];
+                break;
+            case "-h":
             default:
                 worker.printHelp();
-                break;
+                return;
             }
-        } else {
-            worker.combine(input);
         }
+        worker.combine(input, filename);
     }
 }
