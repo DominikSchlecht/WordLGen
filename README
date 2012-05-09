@@ -1,0 +1,36 @@
+The WordListGenerator (WordLGen)
+lets you save all combinations of given words (no matter how many, as long as you pc can stand it).
+
+Help:
+
+Help for 'WordLGen', the easy to use Word List Generator:
+
+Usage:
+'java WordLGen [-d] [-a \"part1 {part2}]'
+Params:
+'-a' use argumented mode, meaning you write the words to
+     combine after this param, divided by ' ' (space).
+'-d' displays all combined words in console, can be
+     combined with '-a'. All combinations are still written to the file (out).
+'-f' the name of the file to write to.
+'-h' display this help.
+
+Examples:
+Working:
+'java WordLGen' starts the programm and allowes you to ender the part afterwards.
+'java WordLGen -a \"one two three\"' will combine the 3 parts.
+'java WordLGen -d -f file1 -a \"one two three\"' will combine the 
+    words 'one' 'two' 'three' and write it to console and to file 'file1'.
+
+Less usefull:" +
+'java WordLGen -h' will display the help.
+'java WordLGen -a \"one two three\" uselessParam' will display the help.
+'java WordLGen -a -b -d -c' will display the help (which you seem to need).
+'java WordLGen \"one two three\"' will display the help.
+
+Made by Dominik Schlecht, dominik.schlecht@hotmail.de");
+
+
+v1.1:
+  -added user choice for file selection
+  -added paramater support for file selection
