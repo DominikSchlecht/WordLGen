@@ -183,7 +183,7 @@ public class WordLGenWorker {
         System.out.print("Help for 'WordLGen', the easy to use Word List " +
         		"Generator\n\n" +
         		"Usage:\n" +
-        		"'java WordLGen [-d] [-a \"part1 {part2}]'\n\n" +
+        		"'java WordLGen [-d] [-f] [-a \"part1 {part2}]'\n\n" +
         		"Params:\n" +
                 "'-a' use argumented mode, meaning you write the words to\n" +
                 "      combine after this param, divided by ' ' (space).\n" +
