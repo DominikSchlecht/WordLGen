@@ -28,7 +28,7 @@ Less usefull:" +
 'java WordLGen -a -b -d -c' will display the help (which you seem to need).
 'java WordLGen \"one two three\"' will display the help.
 
-Made by Dominik Schlecht, dominik.schlecht@hotmail.de");
+Made by Dominik Schlecht, dominik.schlecht@hotmail.de
 
 
 v1.1:
