@@ -3,8 +3,8 @@
  * dominik.schlecht@hotmail.de
  * 
  * WordLGenWorker.java
- * v. 1.1
- * 2012.05.09
+ * v. 1.11
+ * 2012.05.10
  */
 
 import java.io.BufferedReader;
@@ -13,12 +13,14 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Scanner;
 
 public class WordLGenWorker {
     
     //Attributes
     private String[] parts;
-    private boolean consoleOutput = false;
+    private boolean consoleOutput = false,
+                    fileInput = false;
     FileWriter fstream;
 
     //No constructor needed
@@ -27,23 +29,50 @@ public class WordLGenWorker {
     /*
      * Main Method, intializing everything needed
      */
-    public void combine(String iPWords, String iPFilename) throws Exception{
+    public void combine(String iPWords, String iPFilename, String iPInFilename) throws Exception{
         //Init
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter out;
-        File f;
-        String input, filename = iPFilename;
+        File fOutput;
+        String input, 
+                filename = iPFilename;
         int anzW = 0;
         long anzC = 0;
         
-        //Get the words
-        if (iPWords.isEmpty()){
-            System.out.println("Enter the parts to be combined, seperated by ' ' (space)");
-            input = br.readLine();
-           
+        //Get the input from file
+        
+        if (fileInput){
+            Scanner scanner = null;
+            String line = "";
+            try {
+                scanner = new Scanner(new File(iPInFilename));
+                while (scanner.hasNextLine()){
+                    line = line + scanner.nextLine();
+                    System.out.println("line :" + line);
+                }
+            } catch (IOException e){
+                System.out.println("The inputfile you specified can not be found,\n" +
+                		"programm exits.\n");
+                this.printHelp();
+                return;
+            } finally {
+                try {
+                    scanner.close();
+                } catch (Exception e) {
+                    //swallow
+                }
+            }
+            input = line;
         } else {
-            input = iPWords;
+            //Get the words
+            if (iPWords.isEmpty()){
+                System.out.println("Enter the parts to be combined, seperated by ' ' (space)");
+                input = br.readLine();
+            } else {
+                input = iPWords;
+            }
         }
+        
         
         //Count words
         for (int i = 0; i < input.length(); i++){
@@ -103,8 +132,8 @@ public class WordLGenWorker {
             System.out.println("Desired filename: ");
             filename = br.readLine();
         }
-        f = new File(filename);
-        if(f.exists()){
+        fOutput = new File(filename);
+        if(fOutput.exists()){
             //File already exists, complain
             System.out.println("File already exists, do you want the file to " +
                     "be overwritten?\n(Allowed input: 'yes', 'y', 'no', 'n')" +
@@ -117,7 +146,7 @@ public class WordLGenWorker {
                 case "y":
                     //User wants to overwrite file
                     System.out.println("The existing file will be overwritten");
-                    f.createNewFile();
+                    fOutput.createNewFile();
                     ok = true;
                     break;
                 case "no":
@@ -125,15 +154,15 @@ public class WordLGenWorker {
                     //User doesn't want to overwrite it, exit 
                     //(TODO feature retype filename)
                     System.out.println("The file was not overwritten,\n"+
-                    		"programm exits");
+                    		"programm exits.");
                     return;
                 default:
                     System.out.println("Allowed input: 'yes', 'y', 'no', 'n'");
                 }
             }
         }
-        f.createNewFile();
-        System.out.println("File created: " + f.getAbsolutePath());
+        fOutput.createNewFile();
+        System.out.println("File created: " + fOutput.getAbsolutePath());
         fstream = new FileWriter(filename);
         out = new BufferedWriter(fstream);
         
@@ -183,7 +212,7 @@ public class WordLGenWorker {
         System.out.print("Help for 'WordLGen', the easy to use Word List " +
         		"Generator\n\n" +
         		"Usage:\n" +
-        		"'java WordLGen [-d] [-f] [-a \"part1 {part2}]'\n\n" +
+        		"'java WordLGen [-d] [-f <filename>] [(-r <filename>)|(-a \"part1 {part2})]'\n\n" +
         		"Params:\n" +
                 "'-a' use argumented mode, meaning you write the words to\n" +
                 "      combine after this param, divided by ' ' (space).\n" +
@@ -192,6 +221,7 @@ public class WordLGenWorker {
         		"     to the file (out).\n" +
         		"'-f' the name of the file to write to.\n" +
                 "'-h' display this help\n." +
+                "'-r' read input from file, not from console." +
         		"\n" +
         		"Examples:\n" +
         		"Working: \n" +
@@ -213,9 +243,12 @@ public class WordLGenWorker {
         		"Made by Dominik Schlecht, dominik.schlecht@hotmail.de");
     }
     
-    public String setConsoleOutput(boolean value){
+    public void setConsoleOutput(boolean value){
         consoleOutput = value;
-        return "Conssole Output " + consoleOutput;
+    }
+    
+    public void setInputFile(boolean value){
+        this.fileInput = value;
     }
 
 }
