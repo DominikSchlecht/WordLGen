@@ -3,8 +3,8 @@
  * dominik.schlecht@hotmail.de
  * 
  * WordLGenWorker.java
- * v. 1.11
- * 2012.05.10
+ * v. 1.12
+ * 2012.05.11
  */
 
 import java.io.BufferedReader;
@@ -127,7 +127,7 @@ public class WordLGenWorker {
         //Print the number of combinations
         System.out.println("Number of combinations: " + anzC);
         
-        //Ask for file TODO
+        //Ask for file
         if (filename.isEmpty()){
             System.out.println("Desired filename: ");
             filename = br.readLine();

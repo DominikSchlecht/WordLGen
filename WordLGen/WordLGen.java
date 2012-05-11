@@ -3,8 +3,8 @@
  * dominik.schlecht@hotmail.de
  * 
  * WordLGen.java
- * v. 1.11
- * 2012.05.10
+ * v. 1.12
+ * 2012.05.11
  */
 public class WordLGen {
     
@@ -18,42 +18,64 @@ public class WordLGen {
         for (int i = 0; i < args.length; i++){
             switch (args[i]){
             
+            //Case a for argumented mode
             case "-a":
-                i = i+1; //TODO Fehler absichern
-                if (!inputSourceSet){
-                    input = args[i];
-                } else {
-                    System.out.println("Input specified two times,\n" +
-                            "programm exits.\n");
-                    worker.printHelp();
+                //If to prevent bufferoverflow
+                try {
+                    i = i+1;
+                    if (!inputSourceSet){
+                        input = args[i];
+                    } else {
+                        System.out.println("Input specified two times,\n" +
+                                "programm exits.\n");
+                        worker.printHelp();
+                        return;
+                    }
+                    inputSourceSet = true;
+                    break;
+                } catch (Exception e){
+                    System.out.println("Wrong use of parameter '-a'\n");
                     return;
                 }
-                inputSourceSet = true;
-                break;
-                
+            
+            //Case d for console output
             case "-d":
                 worker.setConsoleOutput(true);
                 break;
-                
+            
+            //Case f for file output
             case "-f":
-                i = i+1;
-                outFilename = args[i];
-                break;
-                
-            case "-r":
-                i = i+1; //TODO Fehler absichern
-                if (!inputSourceSet){
-                    worker.setInputFile(true);
-                    inFilename = args[i];
-                } else {
-                    System.out.println("Input specified two times,\n" +
-                    		"programm exits.\n");
-                    worker.printHelp();
+                try {
+                    i = i+1;
+                    outFilename = args[i];
+                    break;
+                } catch (Exception e){
+                    System.out.println("Wrong use of parameter '-f'\n");
                     return;
                 }
-                inputSourceSet = true;
-                break;
                 
+            //Case r to read the words from file
+            case "-r":
+                //If to prevent bufferoverflow
+                try {
+                    i = i+1;
+                    if (!inputSourceSet){
+                        worker.setInputFile(true);
+                        inFilename = args[i];
+                    } else {
+                        System.out.println("Input specified two times,\n" +
+                                "programm exits.\n");
+                        worker.printHelp();
+                        return;
+                    }
+                    inputSourceSet = true;
+                    break;
+                } catch (Exception e){
+                    System.out.println("Wrong use of parameter '-r'\n");
+                    return;
+                }
+               
+            //Case h to print help
             case "-h":
             default:
                 worker.printHelp();
