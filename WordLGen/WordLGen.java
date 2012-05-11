@@ -20,7 +20,7 @@ public class WordLGen {
             
             //Case a for argumented mode
             case "-a":
-                //If to prevent bufferoverflow
+                //If to prevent bufferoverflow error
                 try {
                     i = i+1;
                     if (!inputSourceSet){
