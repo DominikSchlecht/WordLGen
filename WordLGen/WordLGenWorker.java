@@ -23,7 +23,7 @@ public class WordLGenWorker {
                     fileInput = false;
     FileWriter fstream;
 
-    //No constructor needed
+    //No constructor needed here
     
     //Methods
     /*
