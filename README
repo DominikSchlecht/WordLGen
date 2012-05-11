@@ -30,6 +30,9 @@ Less usefull:" +
 
 Made by Dominik Schlecht, dominik.schlecht@hotmail.de
 
+v1.12:
+   -fixed bufferoverflow errors in parameter work
+
 v1.11:
    -added posibility to specify a file that contains the input
    -corrected EBNF
@@ -37,6 +40,3 @@ v1.11:
 
 v1.1:
    -added file selection
-
-Known Bugs:
-   -several security leaks in parameter working
