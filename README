@@ -14,6 +14,7 @@ Params:
      combined with '-a'. All combinations are still written to the file (out).
 '-f' the name of the file to write to.
 '-h' display this help.
+'-cC' combines upper and lower cases (mind the many combination!)
 
 Examples:
 Working:
@@ -29,6 +30,8 @@ Less usefull:" +
 'java WordLGen \"one two three\"' will display the help.
 
 Made by Dominik Schlecht, dominik.schlecht@hotmail.de
+v1.2:
+   -added the combination od upper and lower case combination
 
 v1.12:
    -fixed bufferoverflow errors in parameter work
