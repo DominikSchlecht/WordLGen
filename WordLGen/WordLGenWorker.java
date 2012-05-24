@@ -3,8 +3,8 @@
  * dominik.schlecht@hotmail.de
  * 
  * WordLGenWorker.java
- * v. 1.12
- * 2012.05.11
+ * v. 1.2
+ * 2012.05.24
  */
 
 import java.io.BufferedReader;
@@ -20,7 +20,8 @@ public class WordLGenWorker {
     //Attributes
     private String[] parts;
     private boolean consoleOutput = false,
-                    fileInput = false;
+                    fileInput = false,
+                    mixCase = false;
     FileWriter fstream;
 
     //No constructor needed here
@@ -37,7 +38,6 @@ public class WordLGenWorker {
         String input, 
                 filename = iPFilename;
         int anzW = 0;
-        long anzC = 0;
         
         //Get the input from file
         
@@ -112,8 +112,10 @@ public class WordLGenWorker {
             next++;
         }
         parts[plInParts] = input.substring(last);
-        
+        /*
+         * Funktioniert gerade nicht... TODO Case combination einrechnen
         //Faktorial
+        long anzC = 0;
         int tmp1, tmp2 = 1;
         for (int j = 1; j <= anzW; j++){
             tmp1 = tmp2;
@@ -126,6 +128,7 @@ public class WordLGenWorker {
         
         //Print the number of combinations
         System.out.println("Number of combinations: " + anzC);
+        */
         
         //Ask for file
         if (filename.isEmpty()){
@@ -191,7 +194,16 @@ public class WordLGenWorker {
                     System.out.println(tmp + this.parts[i]);
                 }
                 try {
-                    out.write(tmp + this.parts[i] + " ");
+                    //Save the output var
+                    String output = tmp + this.parts[i] + " ";
+                    //Mix upper and lower case
+                    if (this.mixCase){
+                        //MixCase true
+                        this.mixCase(output, 0, out);
+                    } else {
+                        //Or not
+                        out.write(output);
+                    }
                 } catch (IOException e) {
                     System.err.println("Error (writing to file): "
                             + e.getMessage());
@@ -199,15 +211,43 @@ public class WordLGenWorker {
             }
         } else {
             //Recursive element somewhere in the middle
-            String ntmp;
-            ntmp = tmp;
+            String newTmp;
+            newTmp = tmp;
             for (int i = 0; i < parts.length; i++){
-                ntmp = tmp + this.parts[i]; 
-                this.combineAndWrite(ntmp, curPos+1, desLen, out);
+                newTmp = tmp + this.parts[i]; 
+                this.combineAndWrite(newTmp, curPos+1, desLen, out);
             }
         }
     }
     
+    public void mixCase(String tmp, int curPos, BufferedWriter out){
+        if (curPos == tmp.length()){
+            //at last positiion, recursive break
+            try {
+                if (this.consoleOutput){
+                    System.out.println(tmp);
+                }
+                out.write(tmp + " ");
+            } catch (IOException e) {
+                System.out.println("Couldn't write file in mixCase");
+                e.printStackTrace();
+            }
+                  
+        } else {
+            //not at last position
+            for (int i = curPos; i < tmp.length(); i++){
+                if (!Character.isDigit(tmp.charAt(i))){
+                    Character upperCaseChar = new Character(Character.toUpperCase(tmp.charAt(i)));
+                    String newTmp = tmp.substring(0, i) + upperCaseChar + tmp.substring(i+1);
+                    this.mixCase(newTmp, i+1, out);
+                }
+            }
+        }
+    }
+    
+    
+    
+    //Prints the help Text
     public void printHelp(){
         System.out.print("Help for 'WordLGen', the easy to use Word List " +
         		"Generator\n\n" +
@@ -222,6 +262,7 @@ public class WordLGenWorker {
         		"'-f' the name of the file to write to.\n" +
                 "'-h' display this help\n." +
                 "'-r' read input from file, not from console." +
+                "'-cC' combines the words in upper and lower case" +
         		"\n" +
         		"Examples:\n" +
         		"Working: \n" +
@@ -231,15 +272,7 @@ public class WordLGenWorker {
         		"parts.\n" +
                 "'java WordLGen -d -f file1 -a \"one two three\"' will combine "+
                 "the words 'one' 'two' 'three'\n" +
-                "     and write it to console and to file 'file1'.\n" +
-        		"\n" +
-        		"Less usefull:" +
-        		"'java WordLGen -h' will display the help\n" +
-        		"'java WordLGen -a \"one two three\" uselessParam' will " +
-        		"display the help.\n" +
-        		"'java WordLGen -a -b -d -c' will display the help (which you " +
-        		"seem to need).\n" +
-        		"'java WordLGen \"one two three\"' will display the help.\n\n" +
+                "     and write it to console and to file 'file1'.\n\n" +
         		"Made by Dominik Schlecht, dominik.schlecht@hotmail.de");
     }
     
@@ -249,6 +282,10 @@ public class WordLGenWorker {
     
     public void setInputFile(boolean value){
         this.fileInput = value;
+    }
+    
+    public void setCaseCombine(boolean value){
+        this.mixCase = value;
     }
 
 }

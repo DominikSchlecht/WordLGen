@@ -3,8 +3,8 @@
  * dominik.schlecht@hotmail.de
  * 
  * WordLGen.java
- * v. 1.12
- * 2012.05.11
+ * v. 1.2
+ * 2012.05.23
  */
 public class WordLGen {
     
@@ -18,7 +18,7 @@ public class WordLGen {
         for (int i = 0; i < args.length; i++){
             switch (args[i]){
             
-            //Case a for argumented mode
+            //Case a for argumented mode TODO prevent -f -r
             case "-a":
                 //If to prevent bufferoverflow error
                 try {
@@ -74,6 +74,12 @@ public class WordLGen {
                     System.out.println("Wrong use of parameter '-r'\n");
                     return;
                 }
+            
+            //Case cC to combine cases
+            case "-cc":
+            case "-cC":
+                worker.setCaseCombine(true);
+                break;
                
             //Case h to print help
             case "-h":
