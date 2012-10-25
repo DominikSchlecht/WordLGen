@@ -3,7 +3,7 @@ lets you save all combinations of given words (no matter how many, as long as yo
 
 Help:
 
-Help for 'WordLGen', the easy to use Word List Generator:
+Helpfile for 'WordLGen', the easy to use Word List Generator:
 
 Usage:
 'java WordLGen [-d] [-f <filename>] [(-r <filename>)|(-a "part1 {part2}")]'
